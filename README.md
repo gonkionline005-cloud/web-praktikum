@@ -12,7 +12,7 @@
 
 ## Стек
 
-React, TypeScript, Vite. Node API и Supabase будут добавлены в лабораторной 8.
+React, TypeScript, Vite. Node API.
 
 ## Версия Node
 

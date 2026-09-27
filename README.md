@@ -73,15 +73,16 @@ npm run preview
 <img width="823" height="606" alt="image" src="https://github.com/user-attachments/assets/c749ecea-2952-430f-842b-5130eb14271f" />
 
 **Список книг (ЛР 2)** — главная страница `/books` со всеми демонстрационными записями:
-
+<img width="1280" height="648" alt="image" src="https://github.com/user-attachments/assets/5a78ad74-cd47-41af-b33e-2a5155de94a4" />
 
 **Страница подробностей книги** — открыта по адресу `/books/:id`, показывает все поля записи:
-
+<img width="1100" height="567" alt="image" src="https://github.com/user-attachments/assets/6301b8af-f7d0-48e2-b313-95091e32348b" />
 
 **Отсутствующая книга** — адрес `/books/missing` совпадает с маршрутом карточки, но такой записи нет:
-
+<img width="948" height="359" alt="image" src="https://github.com/user-attachments/assets/39e07611-0f34-4ff0-9297-b82d5ade9075" />
 
 **Неизвестный адрес** — `/unknown` не совпадает ни с одним маршрутом приложения:
+<img width="980" height="332" alt="image" src="https://github.com/user-attachments/assets/b1c43fab-77a5-412f-ad70-f1d2c9233a3c" />
 
 ## Использование ИИ
 

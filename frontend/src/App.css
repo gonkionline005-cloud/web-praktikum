@@ -11,3 +11,14 @@
 .app h1 {
   color: #4a3728;
 }
+
+nav { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+nav a.active { font-weight: bold; }
+
+.book-list { display: grid; gap: 16px; margin-top: 24px; }
+.book-card { border: 1px solid #ccc; padding: 16px; overflow-wrap: anywhere; }
+.book-card h2 { margin-top: 0; }
+
+@media (min-width: 760px) {
+  .book-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

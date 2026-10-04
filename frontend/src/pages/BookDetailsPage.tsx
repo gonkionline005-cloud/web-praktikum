@@ -1,14 +1,20 @@
-import { Link, useParams } from 'react-router'
-import { books } from '../data/books'
+import { Link, useNavigate, useParams } from 'react-router'
+import type { Book, BookStatus } from '../types/book'
 
-const statusLabels: Record<string, string> = {
+type BookDetailsPageProps = {
+  books: Book[]
+  onDelete: (id: string) => void
+}
+
+const statusLabels: Record<BookStatus, string> = {
   want: 'Хочу прочитать',
   reading: 'Читаю',
   done: 'Прочитано',
 }
 
-export function BookDetailsPage() {
+export function BookDetailsPage({ books, onDelete }: BookDetailsPageProps) {
   const { id } = useParams()
+  const navigate = useNavigate()
   const book = books.find((item) => item.id === id)
 
   if (!book) {
@@ -26,9 +32,24 @@ export function BookDetailsPage() {
       <p>Автор: {book.author}</p>
       <p>Жанр: {book.genre}</p>
       <p>Статус: {statusLabels[book.status]}</p>
-      {book.status === 'done' && <p>Оценка: {book.rating} из 5</p>}
+      {book.status === 'done' && book.rating > 0 && (
+        <p>Оценка: {book.rating} из 5</p>
+      )}
       <p>Заметка: {book.note}</p>
-      <Link to="/books">К списку книг</Link>
+
+      <Link to={`/books/${book.id}/edit`}>Редактировать</Link>{' '}
+      <button
+        type="button"
+        onClick={() => {
+          if (window.confirm(`Удалить книгу «${book.title}»?`)) {
+            onDelete(book.id)
+            navigate('/books', { replace: true })
+          }
+        }}
+      >
+        Удалить
+      </button>
+      <p><Link to="/books">К списку книг</Link></p>
     </section>
   )
 }

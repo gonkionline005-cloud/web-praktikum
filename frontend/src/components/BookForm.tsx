@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import type { BookDraft, BookStatus } from '../types/book'
+import { useGenres } from '../hooks/useGenres'
 
 type BookFormProps = {
   initialValues: BookDraft
@@ -29,8 +30,18 @@ export function BookForm(props: BookFormProps) {
   }))
   const [error, setError] = useState('')
 
+  const { load, retry } = useGenres()
+  const genres = load.status === 'success' ? load.data : []
+  const selectedGenreExists = genres.some((genre) => genre.id === draft.genre)
+  const canSave = load.status === 'success' && selectedGenreExists
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (!canSave) {
+      setError('Дождитесь справочника и выберите доступный жанр.')
+      return
+    }
 
     const title = draft.title.trim()
     if (title.length < 3 || title.length > 100) {
@@ -44,6 +55,7 @@ export function BookForm(props: BookFormProps) {
       return
     }
 
+    // Предметная проверка: оценка от 1 до 5 либо не задана
     let rating = 0
     const ratingText = draft.rating.trim()
     if (ratingText !== '') {
@@ -59,7 +71,7 @@ export function BookForm(props: BookFormProps) {
     props.onSave({
       title,
       author,
-      genre: draft.genre.trim(),
+      genre: draft.genre,
       status: draft.status,
       rating,
       note: draft.note.trim(),
@@ -85,11 +97,48 @@ export function BookForm(props: BookFormProps) {
       />
 
       <label htmlFor="book-genre">Жанр</label>
-      <input
+      <select
         id="book-genre"
         value={draft.genre}
+        required
+        disabled={load.status !== 'success' || genres.length === 0}
         onChange={(e) => setDraft({ ...draft, genre: e.target.value })}
-      />
+      >
+        <option value="">Выберите жанр</option>
+        {draft.genre !== '' && !selectedGenreExists && (
+          <option value={draft.genre} disabled>
+            Текущий код: {draft.genre} — выберите доступный жанр
+          </option>
+        )}
+        {genres.map((genre) => (
+          <option key={genre.id} value={genre.id}>
+            {genre.name}
+          </option>
+        ))}
+      </select>
+
+      {load.status === 'loading' && <p role="status">Загружаем жанры…</p>}
+
+      {load.status === 'error' && (
+        <div>
+          <p role="alert">{load.message}</p>
+          <button type="button" onClick={retry}>Повторить</button>
+        </div>
+      )}
+
+      {load.status === 'success' && genres.length === 0 && (
+        <div>
+          <p role="status">Жанров пока нет. Сохранение недоступно.</p>
+          <button type="button" onClick={retry}>Повторить</button>
+        </div>
+      )}
+
+      {load.status === 'success' && genres.length > 0 &&
+        draft.genre !== '' && !selectedGenreExists && (
+          <p role="alert">
+            Прежний жанр не найден в справочнике. Выберите доступный жанр.
+          </p>
+        )}
 
       <label htmlFor="book-status">Статус</label>
       <select
@@ -124,7 +173,7 @@ export function BookForm(props: BookFormProps) {
 
       {error && <p role="alert" className="form-error">{error}</p>}
 
-      <button type="submit">Сохранить</button>
+      <button type="submit" disabled={!canSave}>Сохранить</button>
       <button type="button" onClick={props.onCancel}>Отмена</button>
     </form>
   )

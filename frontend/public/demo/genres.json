@@ -1,0 +1,8 @@
+[
+  { "id": "novel", "name": "Роман" },
+  { "id": "dystopia", "name": "Антиутопия" },
+  { "id": "fantasy", "name": "Фэнтези" },
+  { "id": "philosophical", "name": "Философский роман" },
+  { "id": "detective", "name": "Детектив" },
+  { "id": "classic", "name": "Классика" }
+]

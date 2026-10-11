@@ -59,35 +59,15 @@ npm run preview
 Данные хранятся только в памяти приложения. После обновления страницы
 возвращаются демонстрационные книги из ЛР 2.
 
+## Справочник жанров (ЛР 4)
 
-## Скриншоты
+Жанры книг загружаются по HTTP из файла `frontend/public/demo/genres.json` (в приложении он доступен по адресу `/demo/genres.json`, запрос виден в Network). Загрузка вынесена в сервис `src/services/genres.ts`, который проверяет `response.ok` и структуру JSON (массив объектов с уникальными `id` и непустым `name`). Состояниями запроса управляет хук `src/hooks/useGenres.ts`: загрузка, ошибка, пустой справочник и кнопка «Повторить». При уходе со страницы запрос отменяется через `AbortController`.
 
-**Рабочий экран приложения** — стартовая страница после замены шаблона Vite на свой контент:
-<img width="1364" height="697" alt="image" src="https://github.com/user-attachments/assets/cfae819a-b1a4-4387-98d4-71111fd0417a" />
+В форме добавления и редактирования книги жанр выбирается из загруженного списка. Пока справочник не загружен или жанр не выбран, сохранить книгу нельзя. Повторная загрузка не стирает уже введённые поля.
 
-**Проверка типов** — временно присвоила переменной `appTitle` (тип `string`) число вместо строки, чтобы убедиться, что TypeScript ловит такие ошибки при сборке:
-<img width="711" height="248" alt="image" src="https://github.com/user-attachments/assets/32913dc3-e454-4a6c-a9f9-9a69c9ea83f6" />
+В книге хранится `id` жанра (например `novel`), а на экране показывается его название («Роман»).
 
-**Успешная сборка** после исправления ошибки — `npm run build` проходит без предупреждений:
-<img width="714" height="257" alt="image" src="https://github.com/user-attachments/assets/183f890e-ba6b-4ea4-b3fa-9acad9610033" />
-
-**Хэш коммита ЛР 1** (`git log -1 --oneline`):
-<img width="748" height="405" alt="image" src="https://github.com/user-attachments/assets/ec7a6647-c01c-4a55-af32-c2481c048543" />
-
-**Проверка запуска из чистой копии** (`git clone` → `npm ci` → `npm run build`):
-<img width="823" height="606" alt="image" src="https://github.com/user-attachments/assets/c749ecea-2952-430f-842b-5130eb14271f" />
-
-**Список книг (ЛР 2)** — главная страница `/books` со всеми демонстрационными записями:
-<img width="1280" height="648" alt="image" src="https://github.com/user-attachments/assets/5a78ad74-cd47-41af-b33e-2a5155de94a4" />
-
-**Страница подробностей книги** — открыта по адресу `/books/:id`, показывает все поля записи:
-<img width="1100" height="567" alt="image" src="https://github.com/user-attachments/assets/6301b8af-f7d0-48e2-b313-95091e32348b" />
-
-**Отсутствующая книга** — адрес `/books/missing` совпадает с маршрутом карточки, но такой записи нет:
-<img width="948" height="359" alt="image" src="https://github.com/user-attachments/assets/39e07611-0f34-4ff0-9297-b82d5ade9075" />
-
-**Неизвестный адрес** — `/unknown` не совпадает ни с одним маршрутом приложения:
-<img width="980" height="332" alt="image" src="https://github.com/user-attachments/assets/b1c43fab-77a5-412f-ad70-f1d2c9233a3c" />
+Основные записи по-прежнему хранятся только в памяти приложения: после обновления страницы возвращаются демонстрационные книги.
 
 ## Использование ИИ
 

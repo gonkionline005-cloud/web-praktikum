@@ -30,7 +30,7 @@ export function BookDetailsPage({ books, onDelete }: BookDetailsPageProps) {
     <section>
       <h1>{book.title}</h1>
       <p>Автор: {book.author}</p>
-      <p>Жанр: {book.genre}</p>
+      <p>Жанр (код): {book.genre}</p>
       <p>Статус: {statusLabels[book.status]}</p>
       {book.status === 'done' && book.rating > 0 && (
         <p>Оценка: {book.rating} из 5</p>

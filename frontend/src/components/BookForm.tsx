@@ -55,7 +55,6 @@ export function BookForm(props: BookFormProps) {
       return
     }
 
-    // Предметная проверка: оценка от 1 до 5 либо не задана
     let rating = 0
     const ratingText = draft.rating.trim()
     if (ratingText !== '') {
@@ -131,6 +130,12 @@ export function BookForm(props: BookFormProps) {
           <p role="status">Жанров пока нет. Сохранение недоступно.</p>
           <button type="button" onClick={retry}>Повторить</button>
         </div>
+      )}
+
+      {load.status === 'success' && (
+        <button type="button" onClick={retry}>
+          Обновить справочник
+        </button>
       )}
 
       {load.status === 'success' && genres.length > 0 &&

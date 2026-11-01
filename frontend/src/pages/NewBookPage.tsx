@@ -3,7 +3,7 @@ import { BookForm } from '../components/BookForm'
 import type { BookDraft } from '../types/book'
 
 type NewBookPageProps = {
-  onCreate: (draft: BookDraft) => string
+  onCreate: (draft: BookDraft) => Promise<string>
 }
 
 const emptyBook: BookDraft = {
@@ -18,8 +18,8 @@ const emptyBook: BookDraft = {
 export function NewBookPage({ onCreate }: NewBookPageProps) {
   const navigate = useNavigate()
 
-  function handleSave(draft: BookDraft) {
-    const id = onCreate(draft)
+  async function handleSave(draft: BookDraft) {
+    const id = await onCreate(draft)
     navigate(`/books/${id}`)
   }
 

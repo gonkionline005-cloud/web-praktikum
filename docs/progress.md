@@ -41,3 +41,19 @@
 Проверка: запрос к Supabase в Network; пустой справочник и восстановление seed с кнопкой «Обновить справочник»; запрет insert в `genres` и select из `books` из браузера (ошибка 401 / 42501); CRUD и фильтр ЛР 3; `npm run build` и `npm run preview`.
 
 Коммит: 221386a Lab 5: add Supabase schema and reference data
+
+## ЛР 6 — Supabase Auth и личные записи
+
+Auth: провайдер Email включён, Confirm email включено, Site URL и Redirect URLs `http://localhost:5173`.
+
+Сделано: регистрация, вход и выход; защищённые маршруты (`RequireAuth`); книги перенесены из состояния `App` в таблицу `books` (`src/services/books.ts`); файл с демонстрационными книгами удалён. Доступ: `genres` читают все, `books` читает и меняет только владелец (4 политики RLS по `owner_id = auth.uid()`).
+
+Порядок применения SQL (SQL Editor): 1) `202610250001_initial_schema.sql`, 2) `seed.sql`, 3) `202610260001_books_owner_policies.sql`.
+
+Проверка: вход и выход; книги сохраняются после обновления страницы; под вторым аккаунтом чужих книг не видно; запросы к чужим данным из консоли отклонены; `npm run build` и `npm run preview`.
+
+- Email/password: включен
+- Confirm email: включено
+- Site URL / Redirect URLs: http://localhost:5173
+
+Коммит: <хэш>

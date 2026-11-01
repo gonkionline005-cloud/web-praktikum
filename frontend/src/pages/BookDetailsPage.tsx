@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import type { Book, BookStatus } from '../types/book'
 
 type BookDetailsPageProps = {
   books: Book[]
-  onDelete: (id: string) => void
+  onDelete: (id: string) => Promise<void>
 }
 
 const statusLabels: Record<BookStatus, string> = {
@@ -15,6 +16,8 @@ const statusLabels: Record<BookStatus, string> = {
 export function BookDetailsPage({ books, onDelete }: BookDetailsPageProps) {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [pending, setPending] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const book = books.find((item) => item.id === id)
 
   if (!book) {
@@ -24,6 +27,23 @@ export function BookDetailsPage({ books, onDelete }: BookDetailsPageProps) {
         <Link to="/books">К списку книг</Link>
       </section>
     )
+  }
+
+  async function handleDelete(target: Book) {
+    if (pending) return
+    if (!window.confirm(`Удалить книгу «${target.title}»?`)) return
+    try {
+      setPending(true)
+      setDeleteError('')
+      await onDelete(target.id)
+      navigate('/books', { replace: true })
+    } catch (e: unknown) {
+      setDeleteError(
+        e instanceof Error ? e.message : 'Не удалось удалить книгу.'
+      )
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -37,17 +57,11 @@ export function BookDetailsPage({ books, onDelete }: BookDetailsPageProps) {
       )}
       <p>Заметка: {book.note}</p>
 
+      {deleteError && <p role="alert" className="form-error">{deleteError}</p>}
+
       <Link to={`/books/${book.id}/edit`}>Редактировать</Link>{' '}
-      <button
-        type="button"
-        onClick={() => {
-          if (window.confirm(`Удалить книгу «${book.title}»?`)) {
-            onDelete(book.id)
-            navigate('/books', { replace: true })
-          }
-        }}
-      >
-        Удалить
+      <button type="button" disabled={pending} onClick={() => handleDelete(book)}>
+        {pending ? 'Удаляем…' : 'Удалить'}
       </button>
       <p><Link to="/books">К списку книг</Link></p>
     </section>

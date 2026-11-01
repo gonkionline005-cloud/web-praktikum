@@ -4,7 +4,7 @@ import type { Book, BookDraft } from '../types/book'
 
 type EditBookPageProps = {
   books: Book[]
-  onUpdate: (id: string, draft: BookDraft) => void
+  onUpdate: (id: string, draft: BookDraft) => Promise<void>
 }
 
 export function EditBookPage({ books, onUpdate }: EditBookPageProps) {
@@ -36,8 +36,8 @@ export function EditBookPage({ books, onUpdate }: EditBookPageProps) {
       <BookForm
         key={book.id}
         initialValues={initialValues}
-        onSave={(draft) => {
-          onUpdate(book.id, draft)
+        onSave={async (draft) => {
+          await onUpdate(book.id, draft)
           navigate(`/books/${book.id}`)
         }}
         onCancel={() => navigate(`/books/${book.id}`)}

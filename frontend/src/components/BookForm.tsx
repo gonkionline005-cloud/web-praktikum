@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import type { BookDraft, BookStatus } from '../types/book'
 import { useGenres } from '../hooks/useGenres'
 
 type BookFormProps = {
   initialValues: BookDraft
-  onSave: (draft: BookDraft) => void
+  onSave: (draft: BookDraft) => Promise<void>
   onCancel: () => void
 }
 
@@ -29,14 +29,18 @@ export function BookForm(props: BookFormProps) {
     note: props.initialValues.note,
   }))
   const [error, setError] = useState('')
+  const [pending, setPending] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const submitting = useRef(false)
 
   const { load, retry } = useGenres()
   const genres = load.status === 'success' ? load.data : []
   const selectedGenreExists = genres.some((genre) => genre.id === draft.genre)
   const canSave = load.status === 'success' && selectedGenreExists
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (submitting.current) return
 
     if (!canSave) {
       setError('Дождитесь справочника и выберите доступный жанр.')
@@ -67,14 +71,26 @@ export function BookForm(props: BookFormProps) {
     }
 
     setError('')
-    props.onSave({
-      title,
-      author,
-      genre: draft.genre,
-      status: draft.status,
-      rating,
-      note: draft.note.trim(),
-    })
+    submitting.current = true
+    try {
+      setPending(true)
+      setSubmitError('')
+      await props.onSave({
+        title,
+        author,
+        genre: draft.genre,
+        status: draft.status,
+        rating,
+        note: draft.note.trim(),
+      })
+    } catch (e: unknown) {
+      setSubmitError(
+        e instanceof Error ? e.message : 'Не удалось сохранить запись.'
+      )
+    } finally {
+      submitting.current = false
+      setPending(false)
+    }
   }
 
   return (
@@ -177,8 +193,11 @@ export function BookForm(props: BookFormProps) {
       />
 
       {error && <p role="alert" className="form-error">{error}</p>}
+      {submitError && <p role="alert" className="form-error">{submitError}</p>}
 
-      <button type="submit" disabled={!canSave}>Сохранить</button>
+      <button type="submit" disabled={!canSave || pending}>
+        {pending ? 'Сохраняем…' : 'Сохранить'}
+      </button>
       <button type="button" onClick={props.onCancel}>Отмена</button>
     </form>
   )

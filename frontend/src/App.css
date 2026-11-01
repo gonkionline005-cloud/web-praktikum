@@ -28,3 +28,5 @@ nav a.active { font-weight: bold; }
 form { display: grid; gap: 8px; max-width: 480px; margin-top: 16px; }
 form textarea { min-height: 80px; }
 .form-error { color: #b00020; }
+
+.auth-bar { font-size: 14px; margin-top: 8px; }

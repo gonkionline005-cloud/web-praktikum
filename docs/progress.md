@@ -56,4 +56,4 @@ Auth: провайдер Email включён, Confirm email включено, S
 - Confirm email: включено
 - Site URL / Redirect URLs: http://localhost:5173
 
-Коммит: <хэш>
+Коммит: 4c530e2 (HEAD -> main, origin/main, origin/HEAD) Lab 6: add auth and persistent personal records
